@@ -2,6 +2,15 @@
 import cv2
 
 
+class Frame(object):
+    def __init__(self, index, diff):
+        self.index = index
+        self.diff = diff
+
+    def __repr__(self):
+        return '<index: %r, diff: %r>' % (self.index, self.diff)
+
+
 def frames(cap=None):
     if not cap:
         return

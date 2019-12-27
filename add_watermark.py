@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import cv2
 import numpy as np
-from utils import frames
+from utils import *
 
 SYN_SEQ = [0, 0, 0, 1, 1, 1, 0, 1, 0, 1]
 WATERMARK = [1, 0, 1, 0, 1, 1, 0, 1, 0, 0]
