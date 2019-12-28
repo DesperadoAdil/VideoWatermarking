@@ -38,3 +38,14 @@ def frames(cap=None):
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
+
+
+def get_frame(cap, index):
+    if cap.isOpened():
+        if hasattr(cv2, 'cv'):
+            cap.set(cv2.cv.CAP_PROP_POS_FRAMES, index)
+        else:
+            cap.set(cv2.CAP_PROP_POS_FRAMES, index)
+        ret, frame = cap.read()
+        return frame if ret else None
+    return None
