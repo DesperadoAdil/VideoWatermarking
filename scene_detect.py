@@ -2,10 +2,7 @@
 import cv2
 import numpy as np
 from utils import *
-
-WINDOW_SIZE = 10
-SHOT_MIN_LEN = 8
-JUDGE_RATE = 6
+from config import *
 
 
 def scene_detect(cap, window_size=WINDOW_SIZE):
