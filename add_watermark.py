@@ -102,12 +102,10 @@ def add_watermark(cap, out=None):
 
 if __name__ == '__main__':
     path = "./test.avi"
-    cap = cv2.VideoCapture(path)
-    fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    out = cv2.VideoWriter('test_output.avi', fourcc, 30.0, (int(cap.get(3)), int(cap.get(4))))
+    with open_video(path) as v:
+        fourcc = cv2.VideoWriter_fourcc(*'XVID')
+        out = cv2.VideoWriter('test_output.avi', fourcc, 30.0, (int(v.cap.get(3)), int(v.cap.get(4))))
+        add_watermark(v.cap, out)
+        out.release()
 
-    add_watermark(cap, out)
-
-    out.release()
-    cap.release()
     cv2.destroyAllWindows()

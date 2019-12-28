@@ -11,6 +11,19 @@ class Frame(object):
         return '<index: %r, diff: %r>' % (self.index, self.diff)
 
 
+class open_video(object):
+    def __init__(self, path):
+        self.path = path
+        self.cap = cv2.VideoCapture(path)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        print ("Video Exit With: %s, %s" % (exc_type, exc_val))
+        self.cap.release()
+
+
 def frames(cap=None):
     if not cap:
         return

@@ -69,7 +69,7 @@ def scene_detect(cap, window_size=WINDOW_SIZE):
 
 if __name__ == '__main__':
     path = "./test_output.avi"
-    cap = cv2.VideoCapture(path)
-    print (scene_detect(cap))
-    cap.release()
+    with open_video(path) as v:
+        print (scene_detect(v.cap))
+
     cv2.destroyAllWindows()
