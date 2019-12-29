@@ -67,10 +67,10 @@ def add_watermark(cap, out=None):
                         tmp = np.concatenate([tmp, W[ii, jj]], 1)
                     w = np.concatenate([w, tmp]) if w is not None else tmp
                 w *= watermark[(frame_num//K) % WM_LEN]
-                print (w)
+                # print (w)
 
                 block_float = block.astype(np.float64)
-                print (block[:8, :8])
+                # print (block[:8, :8])
                 if frame_num % K < ((K-1)//2):
                     block_float += w
                 elif frame_num % K > ((K-1)//2):
@@ -95,7 +95,7 @@ def add_watermark(cap, out=None):
         if (block_new == y).all():
             print ("------------------------------!")
 
-        print (block_new[:8, :8])
+        # print (block_new[:8, :8])
         yuv[:, :, 0] = block_new
         # print (yuv)
         rgb = cv2.cvtColor(yuv, cv2.COLOR_YCrCb2BGR)
@@ -110,10 +110,10 @@ def add_watermark(cap, out=None):
 
 
 if __name__ == '__main__':
-    path = "./tiny.avi"
+    path = "./color.avi"
     with open_video(path) as v:
         fourcc = cv2.VideoWriter_fourcc(*'XVID')
-        out = cv2.VideoWriter('tiny_output.avi', fourcc, 30.0, (int(v.cap.get(3)), int(v.cap.get(4))))
+        out = cv2.VideoWriter('color_output.avi', fourcc, 30.0, (int(v.cap.get(3)), int(v.cap.get(4))))
         add_watermark(v.cap, out)
         out.release()
 

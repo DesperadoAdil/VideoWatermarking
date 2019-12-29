@@ -11,7 +11,7 @@ BLOCK = 32 # block size
 SBLOCK = 8 # secondary block size
 WATSON_NUMBER = 0.649 # Watson 感知模型提供的建议值
 B = 2 # beita
-K = 5 # mkae 1bit message hide in K frame
+K = 5 # mkae 1bit message hide in K frame, must be odd number
 T = [
     [1.40, 1.01, 1.16, 1.66, 2.4, 3.43, 4.79, 6.56],
     [1.01, 1.45, 1.32, 1.52, 2.0, 2.71, 3.67, 4.93],
@@ -27,4 +27,4 @@ watermark = [i if i is 1 else -1 for i in (SYN_SEQ + WATERMARK)]
 print (watermark)
 WM_LEN = len(watermark)
 S = K * WM_LEN
-EQUAL_DIFF = 10
+EQUAL_DIFF = 5

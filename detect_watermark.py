@@ -5,15 +5,60 @@ from scene_detect import scene_detect
 from utils import *
 from config import *
 
+FRAME_CODE = {}
+
+
+class Code(object):
+    def __init__(self, index, code):
+        self.index = index
+        self.code = code
+        self.next = None
+
+
+def equal(x):
+    mean = np.mean(x)
+    for item in x:
+        if item != mean and abs(item-mean) < EQUAL_DIFF:
+            return False
+    return True
+
+
+def search(index, i, scene_y, rows, cols):
+    print ("index: %d, i: %d, len: %d" % (index, i, len(scene_y)))
+    if FRAME_CODE.get(index+i):
+        return FRAME_CODE.get(index+i)
+
+    detect_area = [y[rows//4:rows*3//4, cols//4:cols*3//4] for y in scene_y[i:i+K]]
+    avg_y = [np.mean(y) for y in detect_area]
+    mid = (K-1)//2
+    if np.sum(avg_y[:mid])/mid >= avg_y[mid] and np.sum(avg_y[mid+1:])/mid <= avg_y[mid] \
+        and equal(avg_y[:mid]) and equal(avg_y[mid+1:]):
+        code = 1
+        print ("frame: %d" % (index+i))
+        print ("c: %s\n" % str(avg_y))
+    elif np.sum(avg_y[:mid])/mid <= avg_y[mid] and np.sum(avg_y[mid+1:])/mid >= avg_y[mid] \
+        and equal(avg_y[:mid]) and equal(avg_y[mid+1:]):
+        code = -1
+        print ("frame: %d" % (index+i))
+        print ("b: %s\n" % str(avg_y))
+    elif (i+index) % 5 == 0:
+        print ("-----------------frame: %d" % (index+i))
+        print ("b: %s\n" % str(avg_y))
+        return []
+    else:
+        return []
+
+    FRAME_CODE[index+i] = Code(index+i, code)
+    if i+K+K <= len(scene_y):
+        FRAME_CODE[index+i].next = search(index, i+K, scene_y, rows, cols)
+
+    return FRAME_CODE[index+i]
+
 
 def detect_watermark(cap, scenes):
     width, height = int(cap.get(3)), int(cap.get(4))
     print (width, height)
 
-    """for index, frame in frames(cap):
-        cv2.imshow("frame", frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break"""
     index = 0
     for item in scenes:
         scene_len = item.index - index + 1
@@ -27,37 +72,20 @@ def detect_watermark(cap, scenes):
         print ("rows: %s, cols: %s" % (rows, cols))
         scene_y = [cv2.cvtColor(frame, cv2.COLOR_BGR2YCrCb)[:, :, 0] for frame in scene_frame]
         for i in range(scene_len-K+1):
-            # detect_area = [y[rows//4:rows*3//4, cols//4:cols*3//4] for y in scene_y[i:i+K]]
-            detect_area = [y[96:128, 160:192] for y in scene_y[i:i+K]]
-            # print (detect_area)
-            # print (detect_area[0].shape)
-            avg_y = [np.mean(y) for y in detect_area]
-            # print (avg_y)
-            if avg_y[0] > avg_y[2] and avg_y[1] > avg_y[2] and avg_y[3] < avg_y[2] and avg_y[4] < avg_y[2]:
-                print ("frame: %d" % (index+i))
-                print ("c: %s\n" % str(avg_y))
-
+            search(index, i, scene_y, rows, cols)
 
         index = item.index + 1
 
 
-    """i = 299
-    while i >= 0:
-        frame = get_frame(cap, i)
-        cv2.imshow("frame", frame)
-        i -= 1
-
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break"""
-
-
 if __name__ == '__main__':
-    path = "./test_output.avi"
+    path = "./color_output.avi"
     with open_video(path) as v:
         scenes = scene_detect(v.cap)
         print (scenes)
 
     with open_video(path) as v:
         detect_watermark(v.cap, scenes)
+
+    print (FRAME_CODE)
 
     cv2.destroyAllWindows()
