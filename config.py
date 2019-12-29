@@ -6,7 +6,7 @@ SHOT_MIN_LEN = 8
 JUDGE_RATE = 6
 
 SYN_SEQ = [1, 1, 1, 1, 1]
-WATERMARK = [1, 0, 1, 0, 1]
+WATERMARK = [0, 0, 0, 0, 0]
 BLOCK = 32 # block size
 SBLOCK = 8 # secondary block size
 WATSON_NUMBER = 0.649 # Watson 感知模型提供的建议值
@@ -24,5 +24,7 @@ T = [
 ]
 T = np.array(T)
 watermark = [i if i is 1 else -1 for i in (SYN_SEQ + WATERMARK)]
+print (watermark)
 WM_LEN = len(watermark)
 S = K * WM_LEN
+EQUAL_DIFF = 10

@@ -15,8 +15,8 @@ def add_watermark(cap, out=None):
         print ("Y: ", Y.shape)
         y = np.copy(Y)
 
-        block_rows = int(rows/BLOCK)
-        block_cols = int(cols/BLOCK)
+        block_rows = rows//BLOCK
+        block_cols = cols//BLOCK
         shape = (block_rows, block_cols, BLOCK, BLOCK)
         print (Y.itemsize, Y.strides)
         strides = 3 * Y.itemsize * np.array([BLOCK*cols, BLOCK, cols, 1])
@@ -28,7 +28,7 @@ def add_watermark(cap, out=None):
                 block = block_y[i, j]
                 avg = np.sum(np.reshape(block, (block.size, ))) / (BLOCK*BLOCK)
 
-                sblock_rows = sblock_cols = int(BLOCK/SBLOCK)
+                sblock_rows = sblock_cols = BLOCK//SBLOCK
                 sshape = (sblock_rows, sblock_rows, SBLOCK, SBLOCK)
                 sstrides = block.itemsize * np.array([SBLOCK*BLOCK, SBLOCK, BLOCK, 1])
                 sblock_y = np.lib.stride_tricks.as_strided(block, shape=sshape, strides=sstrides)
@@ -57,8 +57,8 @@ def add_watermark(cap, out=None):
                 for ii in range(sblock_rows):
                     for jj in range(sblock_cols):
                         t[ii, jj] = T * (DC[ii, jj] / avg_dc) ** WATSON_NUMBER
-                        W[ii, jj] = t[ii, jj] / SBLOCK
-                # W[:,:,:,:] = 3.0
+                        W[ii, jj] = 5 + t[ii, jj] / SBLOCK
+                W[:,:,:,:] = 5.0
 
                 w = None
                 for ii in range(sblock_rows):
@@ -66,18 +66,22 @@ def add_watermark(cap, out=None):
                     for jj in range(1, sblock_cols):
                         tmp = np.concatenate([tmp, W[ii, jj]], 1)
                     w = np.concatenate([w, tmp]) if w is not None else tmp
-                w *= watermark[int((frame_num/K) % WM_LEN)]
+                w *= watermark[(frame_num//K) % WM_LEN]
+                print (w)
 
                 block_float = block.astype(np.float64)
-                if frame_num % K < (K-1) / 2:
+                print (block[:8, :8])
+                if frame_num % K < ((K-1)//2):
                     block_float += w
-                elif frame_num % K > (K-1) / 2:
+                elif frame_num % K > ((K-1)//2):
                     block_float -= w
                 else:
                     pass
                 block_float[block_float < 0] = 0
                 block_float[block_float > 255] = 255
+                # print (block_float)
                 block_y[i, j] = block_float.astype(np.uint8)
+                # print (block_y[i, j])
                 # break
             # break
 
@@ -91,9 +95,14 @@ def add_watermark(cap, out=None):
         if (block_new == y).all():
             print ("------------------------------!")
 
+        print (block_new[:8, :8])
         yuv[:, :, 0] = block_new
+        # print (yuv)
         rgb = cv2.cvtColor(yuv, cv2.COLOR_YCrCb2BGR)
         cv2.imshow('rgb', rgb)
+        # print (cv2.cvtColor(rgb, cv2.COLOR_BGR2YCrCb)[:, :, 0])
+        if cv2.cvtColor(rgb, cv2.COLOR_BGR2YCrCb)[:, :, 0].any() != yuv[:, :, 0].any():
+            raise Exception
 
         # input()
         if out:
@@ -101,10 +110,10 @@ def add_watermark(cap, out=None):
 
 
 if __name__ == '__main__':
-    path = "./test.avi"
+    path = "./tiny.avi"
     with open_video(path) as v:
         fourcc = cv2.VideoWriter_fourcc(*'XVID')
-        out = cv2.VideoWriter('test_output.avi', fourcc, 30.0, (int(v.cap.get(3)), int(v.cap.get(4))))
+        out = cv2.VideoWriter('tiny_output.avi', fourcc, 30.0, (int(v.cap.get(3)), int(v.cap.get(4))))
         add_watermark(v.cap, out)
         out.release()
 
