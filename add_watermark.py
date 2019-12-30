@@ -66,7 +66,7 @@ def add_watermark(cap, out=None):
                     for jj in range(1, sblock_cols):
                         tmp = np.concatenate([tmp, W[ii, jj]], 1)
                     w = np.concatenate([w, tmp]) if w is not None else tmp
-                w *= watermark[(frame_num//K) % WM_LEN]
+                w *= _WATERMARK[(frame_num//K) % WM_LEN]
                 # print (w)
 
                 block_float = block.astype(np.float64)

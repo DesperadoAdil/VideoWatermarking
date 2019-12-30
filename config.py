@@ -23,8 +23,8 @@ T = [
     [6.56, 4.93, 5.88, 7.6, 10.17, 13.51, 17.29, 21.15]
 ]
 T = np.array(T)
-watermark = [i if i is 1 else -1 for i in (SYN_SEQ + WATERMARK)]
-print (watermark)
-WM_LEN = len(watermark)
+_WATERMARK = [i if i is 1 else -1 for i in (SYN_SEQ + WATERMARK)]
+print ("水印信息：", str(_WATERMARK))
+WM_LEN = len(_WATERMARK)
 S = K * WM_LEN
 EQUAL_DIFF = 5
