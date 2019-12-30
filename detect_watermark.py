@@ -67,6 +67,7 @@ def detect_watermark(cap, scenes):
 
     ans = {}
     index = 0
+    scenes = [Frame(899, 1)]
     for item in scenes:
         scene_len = item.index - index + 1
         if scene_len < S:

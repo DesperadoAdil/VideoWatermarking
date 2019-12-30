@@ -57,8 +57,8 @@ def add_watermark(cap, out=None):
                 for ii in range(sblock_rows):
                     for jj in range(sblock_cols):
                         t[ii, jj] = T * (DC[ii, jj] / avg_dc) ** WATSON_NUMBER
-                        W[ii, jj] = 5 + t[ii, jj] / SBLOCK
-                W[:,:,:,:] = 5.0
+                        W[ii, jj] = t[ii, jj] / SBLOCK
+                # W[:,:,:,:] = 5.0
 
                 w = None
                 for ii in range(sblock_rows):
@@ -66,7 +66,7 @@ def add_watermark(cap, out=None):
                     for jj in range(1, sblock_cols):
                         tmp = np.concatenate([tmp, W[ii, jj]], 1)
                     w = np.concatenate([w, tmp]) if w is not None else tmp
-                w *= _WATERMARK[(frame_num//K) % WM_LEN]
+                w *= WATERMARK[(frame_num//K) % WM_LEN]
                 # print (w)
 
                 block_float = block.astype(np.float64)
