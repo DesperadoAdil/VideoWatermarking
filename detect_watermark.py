@@ -110,8 +110,11 @@ def detect_watermark(cap, scenes):
         index = item.index + 1
 
     print ("同步序列：", str(SYN_SEQ))
-    for key, value in sorted(ans.items(), key=lambda x: x[1], reverse=True):
-        print ("检测到水印序列 %s 共 %d 次" % (str(key.split("-")), value))
+    if ans != {}:
+        for key, value in sorted(ans.items(), key=lambda x: x[1], reverse=True):
+            print ("检测到水印序列 %s 共 %d 次" % (str(key.split("-")), value))
+    else:
+        print ("未检测到水印序列！")
 
 
 if __name__ == '__main__':
