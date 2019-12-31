@@ -95,27 +95,33 @@ def detect_watermark(cap, scenes):
             # print (seq)
 
             syn_index = []
-            for i in range(len(seq)-K+1):
-                if seq[i:i+K] == SYN_SEQ:
+            for i in range(len(seq)-SEQ_LEN+1):
+                if np.shape(np.nonzero(np.array(seq[i:i+SEQ_LEN])-np.array(SYN_SEQ))[0])[0] <= 1:
                     syn_index.append(i)
             # print (syn_index)
 
             for i, it in enumerate(syn_index[:-1]):
-                watermark = to_str(seq[it+K:syn_index[i+1]])
-                # print (watermark)
-                if watermark in ans:
-                    ans[watermark] += 1
-                else:
-                    ans[watermark] = 1
+                for j in syn_index[i+1:]:
+                    watermark = to_str(seq[it+SEQ_LEN:j])
+                    # print (watermark)
+                    if watermark == "":
+                        continue
+                    if watermark in ans:
+                        ans[watermark] += 1
+                    else:
+                        ans[watermark] = 1
 
         index = item.index + 1
 
     print ("同步序列：", str(SYN_SEQ))
     if ans != {}:
-        for key, value in sorted(ans.items(), key=lambda x: x[1], reverse=True):
+        ans = sorted(ans.items(), key=lambda x: (x[1], len(x[0])), reverse=True)
+        for key, value in ans:
             print ("检测到水印序列 %s 共 %d 次" % (str(key.split("-")), value))
+        return ans
     else:
         print ("未检测到水印序列！")
+        return None
 
 
 if __name__ == '__main__':
