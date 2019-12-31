@@ -96,7 +96,7 @@ def detect_watermark(cap, scenes):
 
             syn_index = []
             for i in range(len(seq)-SEQ_LEN+1):
-                if np.shape(np.nonzero(np.array(seq[i:i+SEQ_LEN])-np.array(SYN_SEQ))[0])[0] <= 1:
+                if np.shape(np.nonzero(np.array(seq[i:i+SEQ_LEN])-np.array(SYN_SEQ))[0])[0] <= SYN_SEQ_HAMMING_DISTANCE:
                     syn_index.append(i)
             # print (syn_index)
 
