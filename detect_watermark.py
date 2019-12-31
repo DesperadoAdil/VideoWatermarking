@@ -47,10 +47,10 @@ def search(index, i, scene_y, rows, cols):
         code = -1
         # print ("frame: %d" % (index+i))
         # print ("b: %s\n" % str(avg_y))
-    elif (i+index) % 5 == 0:
-        # print ("-----------------frame: %d" % (index+i))
-        # print ("b: %s\n" % str(avg_y))
-        return []
+        """elif (i+index) % K == 0:
+        print ("-----------------frame: %d" % (index+i))
+        print ("b: %s\n" % str(avg_y))
+        return []"""
     else:
         return []
 
