@@ -6,6 +6,7 @@ SHOT_MIN_LEN = 8
 JUDGE_RATE = 6
 
 SYN_SEQ = [1, 1, 1, 1, 1]
+# _WATERMARK = [0, 0, 0, 0, 0]
 _WATERMARK = [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1]
 BLOCK = 32 # block size
 SBLOCK = 8 # secondary block size
@@ -30,3 +31,7 @@ SEQ_LEN = len(SYN_SEQ)
 S = K * WM_LEN
 EQUAL_DIFF = 5
 SYN_SEQ_HAMMING_DISTANCE = 1
+
+
+def get_watermark():
+    return [str(i) for i in _WATERMARK]
