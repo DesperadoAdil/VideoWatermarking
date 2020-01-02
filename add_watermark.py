@@ -113,7 +113,7 @@ if __name__ == '__main__':
     path = "./color.avi"
     with open_video(path) as v:
         fourcc = cv2.VideoWriter_fourcc(*'XVID')
-        out = cv2.VideoWriter('color_output.avi', fourcc, 30.0, (int(v.cap.get(3)), int(v.cap.get(4))))
+        out = cv2.VideoWriter('color_output.avi', fourcc, FPS, (int(v.cap.get(3)), int(v.cap.get(4))))
         add_watermark(v.cap, out)
         out.release()
 

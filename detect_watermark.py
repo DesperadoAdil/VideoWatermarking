@@ -133,6 +133,9 @@ if __name__ == '__main__':
         print ("镜头：", str(scenes))
 
     with open_video(path) as v:
+        fps = v.cap.get(5)
+        if fps != FPS:
+            raise Exception("Wrong fps!")
         detect_watermark(v.cap, scenes)
 
     cv2.destroyAllWindows()

@@ -5,6 +5,7 @@ WINDOW_SIZE = 10
 SHOT_MIN_LEN = 8
 JUDGE_RATE = 6
 
+FPS = 30.0
 SYN_SEQ = [1, 1, 1, 1, 1]
 # _WATERMARK = [0, 0, 0, 0, 0]
 _WATERMARK = [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1]
