@@ -14,12 +14,15 @@ class Code(object):
         self.code = code
         self.next = None
         self.checked = False
+    
+    def __repr__(self):
+        return '<Code index: %r, code: %r>' % (self.index, self.code)
 
 
 def equal(x):
     mean = np.mean(x)
     for item in x:
-        if item != mean and abs(item-mean) < EQUAL_DIFF:
+        if item != mean and abs(item-mean) > EQUAL_DIFF:
             return False
     return True
 
